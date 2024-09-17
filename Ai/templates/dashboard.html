@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        table, th, td {
+            border: 1px solid #333;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #3F2D83;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome to Ai-Verse Dashboard</h1>
+        <p>You have successfully logged in!</p>
+        
+        <!-- Table to display MySQL data -->
+        <table id="csvTable">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Event Name</th>
+                    <th>Branch</th>
+                    <th>Year</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Team Size</th>
+                    <th>Amount</th>
+                    <th>ScreenShot</th>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch the data from Flask backend and display it in the table
+        fetch('/load_csv')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#csvTable tbody');
+                tableBody.innerHTML = '';  // Clear existing rows
+
+                // Loop through the data and create table rows
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+
+                    tr.innerHTML = `
+                        <td>${row.full_name || 'N/A'}</td>
+                        <td>${row.event_name || 'N/A'}</td>
+                        <td>${row.branch || 'N/A'}</td>
+                        <td>${row.year || 'N/A'}</td>
+                        <td>${row.email || 'N/A'}</td>
+                        <td>${row.phone || 'N/A'}</td>
+                        <td>${row.team_size || 'N/A'}</td>
+                        <td>${row.amount || 'N/A'}</td>
+                        <td><img src="${row.screenshot_url || '#'}" alt="Screenshot" style="max-width: 100px;" /></td>
+                        <td>${row.transaction_id || 'N/A'}</td>
+                        <td>${row.date || 'N/A'}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
